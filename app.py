@@ -3,27 +3,21 @@ import pandas as pd
 import os
 import io
 from io import BytesIO
-from PyPDF2 import PdfReader  # Fix for Streamlit Cloud compatibility
+
+try:
+    from PyPDF2 import PdfReader
+except ImportError:
+    st.error("PyPDF2 module not found. Ensure it's installed in requirements.txt.")
+
 from PIL import Image
 import docx
 import matplotlib.pyplot as plt
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 
-# Ensure dependencies are installed in Streamlit Cloud
-def ensure_requirements():
-    with open("requirements.txt", "w") as f:
-        f.write("\n".join([
-            "pandas",
-            "PyPDF2",
-            "Pillow",
-            "python-docx",
-            "matplotlib",
-            "reportlab",
-            "openpyxl"
-        ]))
-
-ensure_requirements()
+# Ensure dependencies are installed locally (Not needed for Streamlit Cloud)
+if not os.getenv("STREAMLIT_CLOUD"):
+    os.system("pip install -r requirements.txt")
 
 # Set Streamlit page config
 st.set_page_config(page_title="📀 Data Sweeper Pro", layout='wide')
