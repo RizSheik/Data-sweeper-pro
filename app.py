@@ -3,12 +3,27 @@ import pandas as pd
 import os
 import io
 from io import BytesIO
-import PyPDF2
+from PyPDF2 import PdfReader  # Fix for Streamlit Cloud compatibility
 from PIL import Image
 import docx
 import matplotlib.pyplot as plt
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
+
+# Ensure dependencies are installed in Streamlit Cloud
+def ensure_requirements():
+    with open("requirements.txt", "w") as f:
+        f.write("\n".join([
+            "pandas",
+            "PyPDF2",
+            "Pillow",
+            "python-docx",
+            "matplotlib",
+            "reportlab",
+            "openpyxl"
+        ]))
+
+ensure_requirements()
 
 # Set Streamlit page config
 st.set_page_config(page_title="📀 Data Sweeper Pro", layout='wide')
@@ -83,7 +98,7 @@ for file in uploaded_files:
         
         elif file_ext == ".pdf":
             st.subheader("📝 PDF File Processing")
-            pdf_reader = PyPDF2.PdfReader(file)
+            pdf_reader = PdfReader(file)
             text = "".join([page.extract_text() for page in pdf_reader.pages if page.extract_text()])
             st.text_area("Extracted Text:", text, height=300)
         
